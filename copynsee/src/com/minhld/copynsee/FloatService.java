@@ -5,13 +5,18 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListPopupWindow;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class FloatService extends Service {
 	private static int ID_NOTIFICATION = 2018;
@@ -35,6 +40,10 @@ public class FloatService extends Service {
 		addFloatingService();
 	}
 	
+	/**
+	 * this will add floating icon and its related click events
+	 * to the android desktop
+	 */
 	private void addFloatingService(){
 		// window manager
 		windowManager = (WindowManager)getSystemService(WINDOW_SERVICE);
@@ -117,6 +126,9 @@ public class FloatService extends Service {
 		});
 	}
 	
+	/**
+	 * this will place an icon to the tray of android system
+	 */
 	private void createNotification(){
 
 		String notifClickToStart = getString(R.string.notif_click_to_start);
@@ -133,7 +145,22 @@ public class FloatService extends Service {
 									getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.notify(ID_NOTIFICATION,notification);
 	}
+	
+	private void initiatePopupWindow(View anchor) {
+		try {
+			Display display = ((WindowManager) getSystemService(
+									Context.WINDOW_SERVICE)).getDefaultDisplay();
+			ListPopupWindow popup = new ListPopupWindow(this);
+			popup.setAnchorView(anchor);
+			popup.setWidth((int) (display.getMetrics(outMetrics);()/(1.5)));
+			popup.show();
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
