@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">copynsee</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">CopyNSee</string>
     <string name="action_settings">Settings</string>
-
+	
+    <!--  -->
+	<string name="notif_click_to_start">Click to start CopyNSee dictionary</string>
 </resources>
