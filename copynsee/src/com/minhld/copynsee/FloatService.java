@@ -2,7 +2,6 @@ package com.minhld.copynsee;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -74,13 +73,14 @@ public class FloatService extends Service {
 							long pressTime = System.currentTimeMillis();
 	
 	
-							// If double click...
+							// if double click
 							if (pressTime - lastPressTime <= 300) {
 								createNotification();
 								FloatService.this.stopSelf();
 								mHasDoubleClicked = true;
 							}
-							else {     // If not double click....
+							else {     
+								// if not double click
 								mHasDoubleClicked = false;
 							}
 							lastPressTime = pressTime; 
@@ -118,13 +118,9 @@ public class FloatService extends Service {
 	}
 	
 	private void createNotification(){
-		Context context = getApplicationContext();
-		Intent notificationIntent = new Intent(context, FloatService.class);
-		PendingIntent pendingIntent = PendingIntent.getService(
-								context, 0, notificationIntent, 0);
-		
-		String notifClickToStart = context.getString(R.string.notif_click_to_start);
-		Notification notification = new Notification.Builder(context).
+
+		String notifClickToStart = getString(R.string.notif_click_to_start);
+		Notification notification = new Notification.Builder(this).
 	    				setContentText(notifClickToStart).
 	    				setSmallIcon(R.drawable.ic_launcher).
 	    				setWhen(System.currentTimeMillis()).
@@ -133,8 +129,8 @@ public class FloatService extends Service {
 		notification.flags = Notification.FLAG_AUTO_CANCEL | 
 							Notification.FLAG_ONGOING_EVENT;
 
-		NotificationManager notificationManager = (NotificationManager)context.
-							getSystemService(Context.NOTIFICATION_SERVICE);
+		NotificationManager notificationManager = (NotificationManager)
+									getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.notify(ID_NOTIFICATION,notification);
 	}
 
