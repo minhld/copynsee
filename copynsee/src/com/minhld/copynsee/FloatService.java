@@ -1,25 +1,19 @@
 package com.minhld.copynsee;
 
-import android.app.Notification;
-import android.app.NotificationManager;
+import com.minhld.copynsee.business.UIProvider;
+
 import android.app.Service;
-import android.content.Context;
+import android.content.ClipboardManager;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListPopupWindow;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class FloatService extends Service {
-	private static int ID_NOTIFICATION = 2018;
 
 	private WindowManager windowManager;
 	private ImageView dictHead;
@@ -38,6 +32,9 @@ public class FloatService extends Service {
 
 		// add floating icon with along service
 		addFloatingService();
+		
+		// add listener to the system clip-board
+		listenClipboard();
 	}
 	
 	/**
@@ -84,7 +81,7 @@ public class FloatService extends Service {
 	
 							// if double click
 							if (pressTime - lastPressTime <= 300) {
-								createNotification();
+								UIProvider.createNotification(FloatService.this);
 								FloatService.this.stopSelf();
 								mHasDoubleClicked = true;
 							}
@@ -127,39 +124,20 @@ public class FloatService extends Service {
 	}
 	
 	/**
-	 * this will place an icon to the tray of android system
+	 * this will listen to the system clip-board 
 	 */
-	private void createNotification(){
-
-		String notifClickToStart = getString(R.string.notif_click_to_start);
-		Notification notification = new Notification.Builder(this).
-	    				setContentText(notifClickToStart).
-	    				setSmallIcon(R.drawable.ic_launcher).
-	    				setWhen(System.currentTimeMillis()).
-	    				build();
-		
-		notification.flags = Notification.FLAG_AUTO_CANCEL | 
-							Notification.FLAG_ONGOING_EVENT;
-
-		NotificationManager notificationManager = (NotificationManager)
-									getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.notify(ID_NOTIFICATION,notification);
+	private void listenClipboard(){
+		ClipboardManager clipboardMngr = (ClipboardManager)
+							getSystemService(CLIPBOARD_SERVICE);
+		clipboardMngr.addPrimaryClipChangedListener(new ClipboardManager.
+									OnPrimaryClipChangedListener() {
+			@Override
+			public void onPrimaryClipChanged() {
+				// open pop-up to display word meanings
+				UIProvider.initiatePopupWindow(FloatService.this, dictHead);
+			}
+		});
 	}
-	
-	private void initiatePopupWindow(View anchor) {
-		try {
-			Display display = ((WindowManager) getSystemService(
-									Context.WINDOW_SERVICE)).getDefaultDisplay();
-			ListPopupWindow popup = new ListPopupWindow(this);
-			popup.setAnchorView(anchor);
-			popup.setWidth((int) (display.getMetrics(outMetrics);()/(1.5)));
-			popup.show();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 	
 	@Override
 	public void onDestroy() {
