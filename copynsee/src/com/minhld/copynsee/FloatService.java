@@ -1,6 +1,7 @@
 package com.minhld.copynsee;
 
 import com.minhld.copynsee.business.UIProvider;
+import com.minhld.copynsee.utils.Utils;
 
 import android.app.Service;
 import android.content.ClipboardManager;
@@ -20,7 +21,8 @@ public class FloatService extends Service {
 
 	boolean mHasDoubleClicked = false;
 	long lastPressTime;
-	
+	boolean longClickPress = false;
+
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -42,10 +44,10 @@ public class FloatService extends Service {
 	 * to the android desktop
 	 */
 	private void addFloatingService(){
-		// window manager
+		// ------ window manager ------ 
 		windowManager = (WindowManager)getSystemService(WINDOW_SERVICE);
 
-		// floating icon
+		// ------ setup floating icon ------ 
 		dictHead = new ImageView(this);
 		dictHead.setImageResource(R.drawable.ic_launcher);
 		
@@ -61,9 +63,12 @@ public class FloatService extends Service {
 		params.x = 0;
 		params.y = 100;
 
+		// add the floating icon to the window list
 		windowManager.addView(dictHead, params);
 
 		try {
+			// handle touch event - setup the double click and single
+			// click in this part
 			dictHead.setOnTouchListener(new View.OnTouchListener() {
 				private WindowManager.LayoutParams paramsF = params;
 				private int initialX;
@@ -71,10 +76,10 @@ public class FloatService extends Service {
 				private float initialTouchX;
 				private float initialTouchY;
 
-				@Override public boolean onTouch(View v, MotionEvent event) {
+				@Override 
+				public boolean onTouch(View v, MotionEvent event) {
 					switch (event.getAction()) {
 						case MotionEvent.ACTION_DOWN: {
-	
 							// get current time in nanoseconds.
 							long pressTime = System.currentTimeMillis();
 	
@@ -110,17 +115,30 @@ public class FloatService extends Service {
 				}
 			});
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
-
+		
+		// ------ handle the long click ------ 
+		dictHead.setOnLongClickListener(new View.OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				Utils.toast(FloatService.this, "long click touch!");
+				longClickPress = true;
+				return false;
+			}
+		});
+		
+		// ------ handle single click ------ 
 		dictHead.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				if (!mHasDoubleClicked){
+				if (!mHasDoubleClicked && !longClickPress){
 					// if single click
 					UIProvider.togglePopupWindow(FloatService.this, dictHead, false);
 				}
+				longClickPress = false;
 			}
 		});
 	}
