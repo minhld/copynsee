@@ -117,8 +117,10 @@ public class FloatService extends Service {
 
 			@Override
 			public void onClick(View arg0) {
-				//initiatePopupWindow(dictHead);
-				//_enable = false;
+				if (!mHasDoubleClicked){
+					// if single click
+					UIProvider.togglePopupWindow(FloatService.this, dictHead, false);
+				}
 			}
 		});
 	}
@@ -134,7 +136,7 @@ public class FloatService extends Service {
 			@Override
 			public void onPrimaryClipChanged() {
 				// open pop-up to display word meanings
-				UIProvider.initiatePopupWindow(FloatService.this, dictHead);
+				UIProvider.togglePopupWindow(FloatService.this, dictHead, true);
 			}
 		});
 	}

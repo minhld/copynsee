@@ -1,10 +1,10 @@
 package com.minhld.copynsee;
 
 import com.minhld.copynsee.R;
+import com.minhld.copynsee.business.UIProvider;
 import com.minhld.copynsee.utils.Utils;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -29,9 +29,8 @@ public class IntroActivity extends Activity {
 			
 			@Override
 			protected void onProgressUpdate(Integer... values){
-				// initialize background service
-				// to draw background floating icon & listen to clip-board
-				startService(new Intent(IntroActivity.this, FloatService.class));
+				// start floating service
+				UIProvider.initiateFloatingService(IntroActivity.this);
 				
 				// remove the current introduction window
 				finish();
