@@ -2,6 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/popup_bg">
-
+    android:padding="@dimen/main_popup_padding"
+    android:background="@android:color/transparent">
+	
+    <RelativeLayout 
+	    android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+        android:background="@drawable/main_curve_bg">
+        
+    </RelativeLayout>
+    
 </RelativeLayout>

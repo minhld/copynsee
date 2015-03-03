@@ -24,7 +24,7 @@ public class UIProvider {
 	        PopupWindow popupWindow = new PopupWindow(popupView);
 	        popupWindow.setWidth(popupWidth);
 	        popupWindow.setHeight(popupHeight);
-	        popupWindow.showAsDropDown(anchor, 100, 100);                
+	        popupWindow.showAsDropDown(anchor, 0, -20);                
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
