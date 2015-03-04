@@ -14,6 +14,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.PopupWindow;
 
+/**
+ * This class will provide basic and commonly use function
+ * for the UI.
+ * 
+ * @author minhld
+ *
+ */
 @SuppressLint("InflateParams")
 public class UIProvider {
 	private static int ID_NOTIFICATION = 2018;
@@ -46,7 +53,7 @@ public class UIProvider {
 		}else{
 			if (popupWindow.isShowing() && !forceOpenPopup){
 				popupWindow.dismiss();
-			}else{
+			}else if (!popupWindow.isShowing()){
 				popupWindow.showAsDropDown(anchor, 0, -20);
 			}
 		}
@@ -81,24 +88,30 @@ public class UIProvider {
 	 * @param context
 	 */
 	public static void createNotification(Context context){
+		// create the pending intent, so that it will wake up the 
+		// floating icon when user click on its item on waiting bar
 		Intent notificationIntent = new Intent(context, FloatService.class);
 		PendingIntent pendingIntent = PendingIntent.getService(
 								context, 0, notificationIntent, 0);
 
-		String notifClickToStart = context.getString(
-						R.string.notif_click_to_start);
+		String notifClickToStart = context.getString(R.string.notif_click_to_start);
 		Notification notification = new Notification.Builder(context).
-	    				setContentText(notifClickToStart).
-	    				setSmallIcon(R.drawable.ic_launcher).
-	    				setWhen(System.currentTimeMillis()).
-	    				setContentIntent(pendingIntent).
-	    				build();
+					    				setContentText(notifClickToStart).
+					    				setSmallIcon(R.drawable.ic_launcher).
+					    				setWhen(System.currentTimeMillis()).
+					    				setContentIntent(pendingIntent).
+					    				build();
 		notification.flags = Notification.FLAG_AUTO_CANCEL | 
 							Notification.FLAG_ONGOING_EVENT;
 
 		NotificationManager notificationManager = (NotificationManager)
 						context.getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.notify(ID_NOTIFICATION,notification);
+		
+		// close floating window if it is available
+		if (popupWindow != null && popupWindow.isShowing()){
+			popupWindow.dismiss();
+		}
 	}
 
 }

@@ -143,27 +143,35 @@ public class FloatService extends Service {
 		});
 	}
 	
+	ClipboardManager clipboardMngr;
+	ClipboardManager.OnPrimaryClipChangedListener clipChangedListener = 
+							new ClipboardManager.OnPrimaryClipChangedListener() {
+		@Override
+		public void onPrimaryClipChanged() {
+			// open pop-up to display word meanings
+			UIProvider.togglePopupWindow(FloatService.this, dictHead, true);
+		}
+	};
+	
 	/**
 	 * this will listen to the system clip-board 
 	 */
 	private void listenClipboard(){
-		ClipboardManager clipboardMngr = (ClipboardManager)
-							getSystemService(CLIPBOARD_SERVICE);
-		clipboardMngr.addPrimaryClipChangedListener(new ClipboardManager.
-									OnPrimaryClipChangedListener() {
-			@Override
-			public void onPrimaryClipChanged() {
-				// open pop-up to display word meanings
-				UIProvider.togglePopupWindow(FloatService.this, dictHead, true);
-			}
-		});
+		clipboardMngr = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+		
+		// register with a listener, it will be remove when icon transforms
+		// into the pending intent on the waiting bar
+		clipboardMngr.addPrimaryClipChangedListener(clipChangedListener);
 	}
 	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		
-		// remove the dictionary head
+		// remove the clip-board listener
+		clipboardMngr.removePrimaryClipChangedListener(clipChangedListener);
+		
+		// remove the floating icon
 		if (dictHead != null) windowManager.removeView(dictHead);
 	}
 }
