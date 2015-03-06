@@ -10,6 +10,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.PopupWindow;
@@ -67,12 +68,12 @@ public class UIProvider {
 	 */
 	private static void initiatePopupWindow(Context context, View anchor) {
 		try {
-	        LayoutInflater popupInflater = (LayoutInflater)context.getSystemService(
+			LayoutInflater popupInflater = (LayoutInflater)context.getSystemService(
 	        								Context.LAYOUT_INFLATER_SERVICE);
-	        int popupWidth = (int)(Utils.getDisplayMatrics(context).widthPixels / 1.8f);
-	        int popupHeight = (int)(Utils.getDisplayMatrics(context).widthPixels / 1.5f);
 	        View popupView = popupInflater.inflate(R.layout.popup_words, null);
 	        
+	        int popupWidth = Utils.getFloatingIconSize() * 5;
+	        int popupHeight = (int)(popupWidth * 1.2f);
 	        popupWindow = new PopupWindow(popupView);
 	        popupWindow.setWidth(popupWidth);
 	        popupWindow.setHeight(popupHeight);

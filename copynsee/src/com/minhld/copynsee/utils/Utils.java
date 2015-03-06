@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 public class Utils {
 	private static DisplayMetrics dispMetrics;
+	private static int floatingIconSize;
 	
 	public static void initUtils(Context context){
 		dispMetrics = new DisplayMetrics();
@@ -38,6 +39,13 @@ public class Utils {
 
 	public static void toast(Context context, String msgStr, int duration){
 		Toast.makeText(context, msgStr, duration).show();
+	}
+
+	public static int getFloatingIconSize() {
+		return floatingIconSize;
+	}
+	public static void setFloatingIconSize(int floatingIconSize) {
+		Utils.floatingIconSize = floatingIconSize;
 	}
 
 }

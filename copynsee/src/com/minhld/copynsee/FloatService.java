@@ -1,6 +1,7 @@
 package com.minhld.copynsee;
 
 import com.minhld.copynsee.business.UIProvider;
+import com.minhld.copynsee.utils.Constant;
 import com.minhld.copynsee.utils.Utils;
 
 import android.app.Service;
@@ -11,8 +12,10 @@ import android.os.IBinder;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 
 public class FloatService extends Service {
 
@@ -50,6 +53,12 @@ public class FloatService extends Service {
 		// ------ setup floating icon ------ 
 		dictHead = new ImageView(this);
 		dictHead.setImageResource(R.drawable.ic_launcher);
+		dictHead.setScaleType(ScaleType.FIT_XY);
+		
+		// set floating icon size
+		int iconSize = (int)(Utils.getDisplayMatrics(this).scaledDensity * 
+							Constant.SIZE_FLOATING_ICON);
+		Utils.setFloatingIconSize(iconSize);
 		
 		final WindowManager.LayoutParams params = 
 				new WindowManager.LayoutParams(
@@ -61,8 +70,10 @@ public class FloatService extends Service {
 
 		params.gravity = Gravity.TOP | Gravity.LEFT;
 		params.x = 0;
-		params.y = 100;
-
+		params.y = 0;
+		params.width = iconSize;
+		params.height = iconSize + 1;
+		
 		// add the floating icon to the window list
 		windowManager.addView(dictHead, params);
 
