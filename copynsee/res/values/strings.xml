@@ -4,7 +4,9 @@
     <string name="app_name">CopyNSee</string>
     <string name="action_settings">Settings</string>
 	
-    <!--  -->
+    <string name="empty"></string>
 	<string name="notif_click_to_start">Click to start CopyNSee service</string>
 	<string name="ui_notice_run_in_bg">CopyNSee will run in background</string>
+	
+	<string name="text_search_hint">Text search…</string>
 </resources>

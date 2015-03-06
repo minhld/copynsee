@@ -1,3 +1,8 @@
 <resources>
 	<color name="popup_bg">#666</color>
+	
+	<color name="text_border">#888</color>
+	<color name="text_bg">#6f6f6f</color>
+	<color name="text_color">#ffffdb</color>
+	
 </resources>

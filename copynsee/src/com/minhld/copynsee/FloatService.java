@@ -1,10 +1,13 @@
 package com.minhld.copynsee;
 
+import butterknife.InjectView;
+
 import com.minhld.copynsee.business.UIProvider;
 import com.minhld.copynsee.utils.Constant;
 import com.minhld.copynsee.utils.Utils;
 
 import android.app.Service;
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -13,14 +16,15 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 public class FloatService extends Service {
 
 	private WindowManager windowManager;
-	private ImageView dictHead;
-
+	private ImageView floatIcon;
+	
 	boolean mHasDoubleClicked = false;
 	long lastPressTime;
 	boolean longClickPress = false;
@@ -50,9 +54,9 @@ public class FloatService extends Service {
 		windowManager = (WindowManager)getSystemService(WINDOW_SERVICE);
 
 		// ------ setup floating icon ------ 
-		dictHead = new ImageView(this);
-		dictHead.setImageResource(R.drawable.ic_launcher);
-		dictHead.setScaleType(ScaleType.FIT_XY);
+		floatIcon = new ImageView(this);
+		floatIcon.setImageResource(R.drawable.ic_launcher);
+		floatIcon.setScaleType(ScaleType.FIT_XY);
 		
 		// set floating icon size
 		int iconSize = (int)(Utils.getDisplayMatrics(this).scaledDensity * 
@@ -74,12 +78,12 @@ public class FloatService extends Service {
 		params.height = iconSize + 1;
 		
 		// add the floating icon to the window list
-		windowManager.addView(dictHead, params);
+		windowManager.addView(floatIcon, params);
 
 		try {
 			// handle touch event - setup the double click and single
 			// click in this part
-			dictHead.setOnTouchListener(new View.OnTouchListener() {
+			floatIcon.setOnTouchListener(new View.OnTouchListener() {
 				private WindowManager.LayoutParams paramsF = params;
 				private int initialX;
 				private int initialY;
@@ -117,7 +121,7 @@ public class FloatService extends Service {
 						case MotionEvent.ACTION_MOVE: {
 							paramsF.x = initialX + (int) (event.getRawX() - initialTouchX);
 							paramsF.y = initialY + (int) (event.getRawY() - initialTouchY);
-							windowManager.updateViewLayout(dictHead, paramsF);
+							windowManager.updateViewLayout(floatIcon, paramsF);
 							break;
 						}
 					}
@@ -129,7 +133,7 @@ public class FloatService extends Service {
 		}
 		
 		// ------ handle the long click ------ 
-		dictHead.setOnLongClickListener(new View.OnLongClickListener() {
+		floatIcon.setOnLongClickListener(new View.OnLongClickListener() {
 			
 			@Override
 			public boolean onLongClick(View v) {
@@ -140,17 +144,18 @@ public class FloatService extends Service {
 		});
 		
 		// ------ handle single click ------ 
-		dictHead.setOnClickListener(new View.OnClickListener() {
+		floatIcon.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				if (!mHasDoubleClicked && !longClickPress){
 					// if single click
-					UIProvider.togglePopupWindow(FloatService.this, dictHead, false);
+					UIProvider.togglePopupWindow(FloatService.this, floatIcon, false);
 				}
 				longClickPress = false;
 			}
 		});
+
 	}
 	
 	ClipboardManager clipboardMngr;
@@ -159,7 +164,10 @@ public class FloatService extends Service {
 		@Override
 		public void onPrimaryClipChanged() {
 			// open pop-up to display word meanings
-			UIProvider.togglePopupWindow(FloatService.this, dictHead, true);
+			UIProvider.togglePopupWindow(FloatService.this, floatIcon, true);
+			
+			ClipData clipData = clipboardMngr.getPrimaryClip();
+			UIProvider.setClipboard(clipData);
 		}
 	};
 	
@@ -182,6 +190,6 @@ public class FloatService extends Service {
 		clipboardMngr.removePrimaryClipChangedListener(clipChangedListener);
 		
 		// remove the floating icon
-		if (dictHead != null) windowManager.removeView(dictHead);
+		if (floatIcon != null) windowManager.removeView(floatIcon);
 	}
 }

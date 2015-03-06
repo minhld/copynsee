@@ -1,17 +1,23 @@
 package com.minhld.copynsee.business;
 
+import butterknife.ButterKnife;
+
 import com.minhld.copynsee.FloatService;
 import com.minhld.copynsee.R;
+import com.minhld.copynsee.utils.Constant;
 import com.minhld.copynsee.utils.Utils;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 
 /**
@@ -24,7 +30,9 @@ import android.widget.PopupWindow;
 @SuppressLint("InflateParams")
 public class UIProvider {
 	private static int ID_NOTIFICATION = 2018;
-	
+
+	private static EditText searchText;
+	private static ImageView searchBtn;
 	private static PopupWindow popupWindow = null;
 	
 	/**
@@ -36,6 +44,14 @@ public class UIProvider {
 		// initialize background service
 		// to draw background floating icon & listen to clip-board
 		context.startService(new Intent(context, FloatService.class));
+	}
+	
+	public static void setClipboard(ClipData clipData){
+		String clipboardText = Constant.EMPTY;
+		for (int i = 0; i < clipData.getItemCount(); i++){
+			clipboardText += clipData.getItemAt(i).getText();
+		}
+		searchText.setText(clipboardText);
 	}
 	
 	/**
@@ -54,7 +70,9 @@ public class UIProvider {
 			if (popupWindow.isShowing() && !forceOpenPopup){
 				popupWindow.dismiss();
 			}else if (!popupWindow.isShowing()){
-				popupWindow.showAsDropDown(anchor, 0, -20);
+				popupWindow.showAsDropDown(anchor, 0, 0);
+//				popupWindow.setFocusable(true);
+//				popupWindow.update();
 			}
 		}
 	}
@@ -76,7 +94,14 @@ public class UIProvider {
 	        popupWindow = new PopupWindow(popupView);
 	        popupWindow.setWidth(popupWidth);
 	        popupWindow.setHeight(popupHeight);
-	        popupWindow.showAsDropDown(anchor, 0, -20);
+	        
+	        popupWindow.showAsDropDown(anchor, 0, 0);
+	        
+	        searchText = (EditText)popupView.findViewById(R.id.searchText);
+	        searchBtn = (ImageView)popupView.findViewById(R.id.searchBtn);
+	        
+//	        popupWindow.setFocusable(true);
+//	        popupWindow.update();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
