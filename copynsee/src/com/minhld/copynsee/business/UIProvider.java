@@ -69,8 +69,8 @@ public class UIProvider {
 		try {
 	        LayoutInflater popupInflater = (LayoutInflater)context.getSystemService(
 	        								Context.LAYOUT_INFLATER_SERVICE);
-	        int popupWidth = (int)(Utils.getDisplayMatrics().widthPixels / 1.8f);
-	        int popupHeight = (int)(Utils.getDisplayMatrics().widthPixels / 1.5f);
+	        int popupWidth = (int)(Utils.getDisplayMatrics(context).widthPixels / 1.8f);
+	        int popupHeight = (int)(Utils.getDisplayMatrics(context).widthPixels / 1.5f);
 	        View popupView = popupInflater.inflate(R.layout.popup_words, null);
 	        
 	        popupWindow = new PopupWindow(popupView);

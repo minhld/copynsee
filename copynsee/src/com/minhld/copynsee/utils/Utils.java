@@ -16,7 +16,11 @@ public class Utils {
 		display.getRealMetrics(dispMetrics);
 	}
 	
-	public static DisplayMetrics getDisplayMatrics(){
+	public static DisplayMetrics getDisplayMatrics(Context context){
+		if (Utils.dispMetrics == null){
+			initUtils(context);
+		}
+		
 		return Utils.dispMetrics;
 	}
 	
