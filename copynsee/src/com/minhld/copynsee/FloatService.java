@@ -1,7 +1,5 @@
 package com.minhld.copynsee;
 
-import butterknife.InjectView;
-
 import com.minhld.copynsee.business.UIProvider;
 import com.minhld.copynsee.utils.Constant;
 import com.minhld.copynsee.utils.Utils;
@@ -16,7 +14,6 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
@@ -99,7 +96,7 @@ public class FloatService extends Service {
 	
 	
 							// if double click
-							if (pressTime - lastPressTime <= 300) {
+							if (pressTime - lastPressTime <= 1000) {
 								UIProvider.createNotification(FloatService.this);
 								FloatService.this.stopSelf();
 								mHasDoubleClicked = true;
