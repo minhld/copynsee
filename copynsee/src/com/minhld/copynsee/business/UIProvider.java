@@ -92,7 +92,6 @@ public class UIProvider {
 	        int popupHeight = (int)(popupWidth * 1.2f);
 	        popupWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
 	        popupWindow.setOutsideTouchable(true);
-			popupWindow.setFocusable(true);
 			popupBackground = context.getResources().getDrawable(R.drawable.ic_blank);
 			popupWindow.setBackgroundDrawable(popupBackground);
 	        popupWindow.showAsDropDown(anchor, 0, 0);

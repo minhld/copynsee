@@ -9,6 +9,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -96,7 +97,7 @@ public class FloatService extends Service {
 	
 	
 							// if double click
-							if (pressTime - lastPressTime <= 1000) {
+							if (pressTime - lastPressTime <= 300) {
 								UIProvider.createNotification(FloatService.this);
 								FloatService.this.stopSelf();
 								mHasDoubleClicked = true;
@@ -145,11 +146,26 @@ public class FloatService extends Service {
 
 			@Override
 			public void onClick(View arg0) {
-				if (!mHasDoubleClicked && !longClickPress){
-					// if single click
-					UIProvider.togglePopupWindow(FloatService.this, floatIcon, false);
-				}
-				longClickPress = false;
+				new AsyncTask<Void, Integer, Void>() {
+
+					@Override
+					protected Void doInBackground(Void... params) {
+						try{
+							Thread.sleep(100);
+							publishProgress(0);
+						}catch(Exception e){ }
+						return null;
+					}
+
+					@Override
+					protected void onProgressUpdate(Integer... values) {
+						if (!mHasDoubleClicked && !longClickPress){
+							// if single click
+							UIProvider.togglePopupWindow(FloatService.this, floatIcon, false);
+						}
+						longClickPress = false;
+					}
+				}.execute();				
 			}
 		});
 
