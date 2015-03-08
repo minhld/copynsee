@@ -71,7 +71,7 @@ public class UIProvider {
 			if (popupWindow.isShowing() && !forceOpenPopup){
 				popupWindow.dismiss();
 			}else if (!popupWindow.isShowing()){
-				popupWindow.showAsDropDown(anchor, 0, 0);
+				popupWindow.showAsDropDown(anchor, 0, 1);
 			}
 		}
 	}
@@ -94,7 +94,7 @@ public class UIProvider {
 	        popupWindow.setOutsideTouchable(true);
 			popupBackground = context.getResources().getDrawable(R.drawable.ic_blank);
 			popupWindow.setBackgroundDrawable(popupBackground);
-	        popupWindow.showAsDropDown(anchor, 0, 0);
+	        popupWindow.showAsDropDown(anchor, 0, 1);
 	        
 	        searchText = (EditText)popupView.findViewById(R.id.searchText);
 	        
@@ -103,7 +103,7 @@ public class UIProvider {
 				@Override
 				public void onClick(View v) {
 					String searchStr = searchText.getText().toString();
-					DataProvider.lookupWord(searchStr);
+					lookupWord(searchStr);
 				}
 	        });
 			
@@ -142,6 +142,21 @@ public class UIProvider {
 		if (popupWindow != null && popupWindow.isShowing()){
 			popupWindow.dismiss();
 		}
+	}
+
+	/**
+	 * this function will analyze the multiple words from user
+	 * and look up in dictionary
+	 * 
+	 * @param words
+	 */
+	private static void lookupWord(String words){
+		new WordsSearchTask(words, new WordsSearchTask.WordsSearchListener() {
+			@Override
+			public void wordsSearchDone(boolean searchResult, String msg) {
+				
+			}
+		}).execute();
 	}
 
 }
