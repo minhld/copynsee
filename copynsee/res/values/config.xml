@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="asset_dict_zip_file">/android_asset/data/dict.zip</string>
+    <string name="asset_cns_folder">.cns</string>
+    <string name="asset_dict_db_folder">db</string>
+</resources>
