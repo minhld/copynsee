@@ -1,6 +1,7 @@
 package com.minhld.copynsee;
 
 import com.minhld.copynsee.R;
+import com.minhld.copynsee.business.DataDownloader;
 import com.minhld.copynsee.business.UIProvider;
 import com.minhld.copynsee.utils.Utils;
 

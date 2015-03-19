@@ -9,4 +9,9 @@
 	<string name="ui_notice_run_in_bg">CopyNSee will run in background</string>
 	
 	<string name="text_search_hint">Text search…</string>
+	<string name="text_download_data">Loading dictionary data…</string>
+	<string name="text_download_unzip">Unzipping data…</string>
+	<string name="text_download_connection_lost">Connection lost</string>
+	<string name="text_download_failed">Download dictionary failed</string>
+	<string name="text_download_finished">Download finished</string>
 </resources>

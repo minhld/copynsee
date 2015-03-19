@@ -6,9 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
 import com.minhld.copynsee.R;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Environment;
 import android.os.Vibrator;
@@ -19,17 +18,18 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 /**
- * multiple functions
+ * this class contains multiple general public functions
  * 
  * @author minhld
  *
  */
+@SuppressLint("ShowToast")
 public class Utils {
 	private static DisplayMetrics dispMetrics;
 	private static int floatingIconSize;
 	
-	private static String fullBasePath=Constant.EMPTY;
-	private static String dbPath=Constant.EMPTY;
+	private static String fullBasePath = Constant.EMPTY;
+	private static String dbPath = Constant.EMPTY;
 	
 	/**
 	 * initialize all parameters
@@ -203,4 +203,16 @@ public class Utils {
 		return fullBasePath;
 	}
 
+	/**
+	 * get dictionary database path
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public static String getDbPath(Context context){
+		if (fullBasePath.equals(Constant.EMPTY)){
+			checkBaseFolder(context);
+		}
+		return dbPath;
+	}
 }
