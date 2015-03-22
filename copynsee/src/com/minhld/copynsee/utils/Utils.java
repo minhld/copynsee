@@ -30,7 +30,7 @@ public class Utils {
 	private static DisplayMetrics dispMetrics;
 	private static int floatingIconSize;
 	
-	private static String fullBasePath = Constant.EMPTY;
+	private static String basePath = Constant.EMPTY;
 	private static String dbPath = Constant.EMPTY;
 	
 	/**
@@ -38,15 +38,17 @@ public class Utils {
 	 * 
 	 * @param context
 	 */
-	public static void initUtils(Context context){
+	public static boolean initUtils(Context context){
 		// get device metrics
 		dispMetrics = new DisplayMetrics();
 		Display display = ((WindowManager) context.getSystemService(
 					Context.WINDOW_SERVICE)).getDefaultDisplay();
 		display.getRealMetrics(dispMetrics);
 		
-		// 
-		getFullBasePath(context);
+		// get base path 
+		getBasePath(context);
+		
+		return false;
 	}
 	
 	public static DisplayMetrics getDisplayMatrics(Context context){
@@ -170,7 +172,7 @@ public class Utils {
     public static boolean checkBaseFolder(Context context){
 		// check if full base path exists. if it really exists
 		// then quit the check and return OK.
-		if (!fullBasePath.equals(Constant.EMPTY)){
+		if (!basePath.equals(Constant.EMPTY)){
 			return true;
 		}
 		boolean isFolderCreated = false;
@@ -178,13 +180,13 @@ public class Utils {
 		String externalPath = Environment.getExternalStorageDirectory().
 						getAbsolutePath() + "/";
 		
-		fullBasePath = externalPath + context.getString(R.string.asset_cns_folder);
-		File p = new File(fullBasePath);
+		basePath = externalPath + context.getString(R.string.asset_cns_folder);
+		File p = new File(basePath);
 		if (!p.exists()){
 			p.mkdir();
 			isFolderCreated = true;
 		}
-		dbPath = fullBasePath + "/" + context.getString(R.string.asset_dict_db_folder);
+		dbPath = basePath + "/" + context.getString(R.string.asset_dict_db_folder);
 		p = new File(dbPath);
 		if (!p.exists()){
 			p.mkdir();
@@ -198,11 +200,11 @@ public class Utils {
 	 * get path of application's base folder
 	 * @return
 	 */
-	public static String getFullBasePath(Context context){
-		if (fullBasePath.equals(Constant.EMPTY)){
+	public static String getBasePath(Context context){
+		if (basePath.equals(Constant.EMPTY)){
 			checkBaseFolder(context);
 		}
-		return fullBasePath;
+		return basePath;
 	}
 
 	/**
@@ -212,7 +214,7 @@ public class Utils {
 	 * @return
 	 */
 	public static String getDbPath(Context context){
-		if (fullBasePath.equals(Constant.EMPTY)){
+		if (basePath.equals(Constant.EMPTY)){
 			checkBaseFolder(context);
 		}
 		return dbPath;

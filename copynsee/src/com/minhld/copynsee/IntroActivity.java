@@ -22,6 +22,8 @@ public class IntroActivity extends Activity {
 	@InjectView(R.id.loadProg) CircularProgressBar loadProg;
 	@InjectView(R.id.statusTxt) TextView statusTxt;
 	
+	boolean isAppExist = false;
+			
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,8 +34,10 @@ public class IntroActivity extends Activity {
 			
 			@Override
 			protected Void doInBackground(Void... params){
+				// get configuration and application availability
 				Utils.initUtils(IntroActivity.this);
-				
+
+				// prepare for data downloading. 
 				DataDownloader downloader = new DataDownloader(
 										IntroActivity.this);
 				downloader.setBookDownloadListener(new DataDownloader.BookDownloadListener() {
@@ -55,11 +59,13 @@ public class IntroActivity extends Activity {
 								break;
 							}
 							case DataDownloader.STATUS_FINISHED : {
+								loadProg.setVisibility(View.GONE);
 								publishProgress(0);
 								break;
 							}
 							case DataDownloader.STATUS_FILE_EXISTED : {
-								Utils.sleep(3000);
+								loadProg.setVisibility(View.GONE);
+								Utils.sleep(2000);
 								publishProgress(0);
 								break;
 							}

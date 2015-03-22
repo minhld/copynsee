@@ -51,11 +51,12 @@ public class DataDownloader extends AsyncTask<Void,Integer,Void>{
 	protected Void doInBackground(Void... params){
 		InputStream input = null;
 		OutputStream output = null;
+		String basePath = Utils.getBasePath(context);
 		String dbBasePath = Utils.getDbPath(context);
 		String dataUrl = context.getString(R.string.data_url);
 		
 		String dataFileName = context.getString(R.string.data_file);
-		String zipDlPath = dbBasePath + "/" + dataFileName;
+		String zipDlPath = basePath + "/" + dataFileName;
 		
 		String dataAVFileName = context.getString(R.string.data_av_file);
 		String dbAVPath = dbBasePath + "/" + dataAVFileName;
