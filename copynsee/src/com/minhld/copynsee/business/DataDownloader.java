@@ -24,8 +24,8 @@ import android.os.AsyncTask;
  */
 public class DataDownloader extends AsyncTask<Void,Integer,Void>{
 	
-	public static final int STATUS_FILE_EXISTED = -1;
-	public static final int STATUS_DOWNLOAD_FAILED = -2;
+	public static final int STATUS_FILE_EXISTED = -201;
+	public static final int STATUS_DOWNLOAD_FAILED = -202;
 	public static final int STATUS_STARTING = 2000;
 	public static final int STATUS_FINISHED = 202;
 	public static final int STATUS_UNZIP_FILE = 201;
@@ -44,7 +44,6 @@ public class DataDownloader extends AsyncTask<Void,Integer,Void>{
 	
 	@Override
 	protected void onPreExecute(){
-		publishProgress(STATUS_STARTING);
 	}
 	
 	@Override
@@ -66,6 +65,9 @@ public class DataDownloader extends AsyncTask<Void,Integer,Void>{
 			publishProgress(STATUS_FILE_EXISTED);
 			return null;
 		}
+
+		// start downloading
+		publishProgress(STATUS_STARTING);
 		
 		try{
 			URL url = new URL(dataUrl);

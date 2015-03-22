@@ -6,19 +6,18 @@ import butterknife.InjectView;
 import com.minhld.copynsee.R;
 import com.minhld.copynsee.business.DataDownloader;
 import com.minhld.copynsee.business.UIProvider;
-import com.minhld.copynsee.components.CircularImageView;
 import com.minhld.copynsee.components.CircularProgressBar;
 import com.minhld.copynsee.utils.Utils;
 
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 
 public class IntroActivity extends Activity {
 
-	@InjectView(R.id.introImg) CircularImageView introImg;
 	@InjectView(R.id.loadProg) CircularProgressBar loadProg;
 	@InjectView(R.id.statusTxt) TextView statusTxt;
 	
@@ -46,6 +45,9 @@ public class IntroActivity extends Activity {
 						switch (code){
 							case DataDownloader.STATUS_STARTING : {
 								loadProg.setVisibility(View.VISIBLE);
+								loadProg.setProgress(0);
+								loadProg.setTitle("0%");
+								loadProg.setSubTitle(getString(R.string.text_download_data));
 								break;
 							}
 							case DataDownloader.STATUS_ONGOING : {
@@ -60,21 +62,20 @@ public class IntroActivity extends Activity {
 							}
 							case DataDownloader.STATUS_FINISHED : {
 								loadProg.setVisibility(View.GONE);
-								publishProgress(0);
+								publishProgress(DataDownloader.STATUS_FINISHED);
 								break;
 							}
 							case DataDownloader.STATUS_FILE_EXISTED : {
 								loadProg.setVisibility(View.GONE);
-								Utils.sleep(2000);
-								publishProgress(0);
+								publishProgress(DataDownloader.STATUS_FILE_EXISTED);
 								break;
 							}
 							default : {
 								loadProg.setVisibility(View.GONE);
 								statusTxt.setVisibility(View.VISIBLE);
 								Utils.vibrate(IntroActivity.this, 500);
-								//Utils.sleep(3000);
-								//System.exit(0);
+								
+								publishProgress(DataDownloader.STATUS_DOWNLOAD_FAILED);
 								break;
 							}
 						}
@@ -88,14 +89,35 @@ public class IntroActivity extends Activity {
 			
 			@Override
 			protected void onProgressUpdate(Integer... values){
-				// start floating service
-				UIProvider.initiateFloatingService(IntroActivity.this);
+				int statusValue = values[0];
 				
-				// remove the current introduction window
-				finish();
-				Utils.toast(IntroActivity.this, R.string.ui_notice_run_in_bg, 3000);
+				if (statusValue > 0){
+					startupService(0);
+				}else if (statusValue == DataDownloader.STATUS_FILE_EXISTED){
+					startupService(1000);
+				}else if (statusValue == DataDownloader.STATUS_DOWNLOAD_FAILED){
+					startupService(2000, true);
+				}
+				
 			}
 		}.execute();
 	}
 
+	void startupService(int runAfterMillisecond, final boolean... isExit){
+		new Handler().postDelayed(new Thread(){
+			public void run(){
+				if (isExit.length > 0 && isExit[0]){
+					System.exit(0);
+					return;
+				}else{
+					// start floating service
+					UIProvider.initiateFloatingService(IntroActivity.this);
+					
+					// remove the current introduction window
+					finish();
+					Utils.toast(IntroActivity.this, R.string.ui_notice_run_in_bg, 3000);
+				}
+			}
+		}, runAfterMillisecond);
+	}
 }
