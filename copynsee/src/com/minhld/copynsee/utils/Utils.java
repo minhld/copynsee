@@ -6,7 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
 import com.minhld.copynsee.R;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Environment;
@@ -214,5 +216,17 @@ public class Utils {
 			checkBaseFolder(context);
 		}
 		return dbPath;
+	}
+	
+	/**
+	 * sleep for a duration of time<br>
+	 * this only works in thread to wait for a while
+	 * 
+	 * @param duration
+	 */
+	public static void sleep(int duration){
+		try{
+			Thread.sleep(duration);
+		}catch (Exception e) { }
 	}
 }

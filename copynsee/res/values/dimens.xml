@@ -8,5 +8,6 @@
     <dimen name="main_popup_inner_padding">10dp</dimen>
     
     <dimen name="text_search_size">15sp</dimen>
+    <dimen name="text_error_size">16sp</dimen>
     
 </resources>

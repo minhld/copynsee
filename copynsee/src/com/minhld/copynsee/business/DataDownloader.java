@@ -13,7 +13,6 @@ import com.minhld.copynsee.R;
 import com.minhld.copynsee.utils.Constant;
 import com.minhld.copynsee.utils.Utils;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -25,35 +24,27 @@ import android.os.AsyncTask;
  */
 public class DataDownloader extends AsyncTask<Void,Integer,Void>{
 	
-	final int STATUS_FILE_EXISTED = -1;
-	final int STATUS_CONNECTION_LOST = -2;
-	final int STATUS_DOWNLOAD_FAILED = -3;
-	final int STATUS_FINISHED = 0;
-	final int STATUS_UNZIP_FILE = 1;
+	public static final int STATUS_FILE_EXISTED = -1;
+	public static final int STATUS_DOWNLOAD_FAILED = -2;
+	public static final int STATUS_STARTING = 2000;
+	public static final int STATUS_FINISHED = 202;
+	public static final int STATUS_UNZIP_FILE = 201;
+	public static final int STATUS_ONGOING = 200;
 	
 	private Context context;
-	private ProgressDialog progressor=null;
-	private BookDownloadListener downloadListener;
+	private BookDownloadListener listener;
 	
-	public void setBookDownloadListener(
-				BookDownloadListener downloadListener){
-		this.downloadListener=downloadListener;
+	public void setBookDownloadListener(BookDownloadListener listener){
+		this.listener=listener;
 	}
 	
 	public DataDownloader(Context ctx){
 		this.context=ctx;
-		this.progressor=new ProgressDialog(ctx);
 	}
 	
 	@Override
 	protected void onPreExecute(){
-		progressor.setMessage(context.getResources().getString(
-						R.string.text_download_data));
-		progressor.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		progressor.setCancelable(false);
-		progressor.setProgress(0);
-		progressor.setMax(100);
-		progressor.show();
+		publishProgress(STATUS_STARTING);
 	}
 	
 	@Override
@@ -87,7 +78,7 @@ public class DataDownloader extends AsyncTask<Void,Integer,Void>{
 	        if (retCode == Constant.SYNC_CODE_OK){
 	        	input = connection.getInputStream();
 	        }else{
-	        	publishProgress(STATUS_CONNECTION_LOST);
+	        	publishProgress(STATUS_DOWNLOAD_FAILED);
 	        	return null;
 	        }
 	        
@@ -110,9 +101,9 @@ public class DataDownloader extends AsyncTask<Void,Integer,Void>{
 	        // extract the ZIP file
 	        publishProgress(STATUS_UNZIP_FILE);
 	        Utils.unzipFile(zipDlPath, dbBasePath);
+	        
 	        // and delete the saved EPUB file
 	        Utils.delete(new File(zipDlPath));
-	        
 	        
 	        publishProgress(STATUS_FINISHED);
 			return null;
@@ -131,35 +122,16 @@ public class DataDownloader extends AsyncTask<Void,Integer,Void>{
 	
 	@Override
 	protected void onProgressUpdate(Integer... values) {
-		if (values[0] == STATUS_FILE_EXISTED){
-			progressor.dismiss();
-		}else if (values[0] == STATUS_CONNECTION_LOST){
-			progressor.dismiss();
-			Utils.toast(context, R.string.text_download_connection_lost, 3000);
-		}else if (values[0] >= 0 && values[0] <= 100){
-			progressor.setProgress(values[0]);
-			return;
-		}else if (values[0] == STATUS_UNZIP_FILE){
-			progressor.setMessage(this.context.getResources().getString(
-									R.string.text_download_unzip));
-			return;
-		}else if (values[0] == STATUS_FINISHED){
-			progressor.dismiss();
-			Utils.toast(context, R.string.text_download_finished);
-			
-			if (downloadListener!=null){
-				downloadListener.downloadDone(STATUS_FINISHED);
-			}
+		int progVal = values[0];
+		if (progVal >= 0 && progVal <= 100){
+			listener.update(STATUS_ONGOING, progVal);
 		}else{
-			// when value is incorrect
-			progressor.dismiss();
-			return;
+			listener.update(progVal, -1);
 		}
-		
 	}
 	
 	public interface BookDownloadListener{
-		public void downloadDone(int resultCode);
+		public void update(int code, int process);
 	}
 	
 }

@@ -36,4 +36,33 @@
         <attr name="circularImageViewStyle" format="reference"></attr>
     </declare-styleable>
     
+    <!-- Circular Progress Bar -->
+    <declare-styleable name="CircularProgressBar">
+        <attr name="hasShadow" format="boolean"/>
+        <attr name="progressColor" format="string"/>
+        <attr name="backgroundColor" format="string"/>
+        <attr name="titleEx" format="string"/>
+        <attr name="titleColor" format="string"/>
+        <attr name="subtitleEx" format="string"/>
+        <attr name="subtitleColor" format="string"/>
+        <attr name="strokeWidth" format="integer"/>
+    </declare-styleable>
+    
+    <style name="Widget"></style>
+
+    <style name="Widget.ProgressBar.CircularProgressBar" parent="Widget">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="progressColor">@color/circular_progress_default_progress</item>
+        <item name="hasShadow">true</item>
+        <item name="strokeWidth">20</item>
+        <item name="titleColor">@color/circular_progress_default_title</item>
+        <item name="subtitleColor">@color/circular_progress_default_subtitle</item>
+    </style>
+
+    <style name="Widget.ProgressBar.Holo.CircularProgressBar" parent="Widget.ProgressBar.CircularProgressBar">
+        <item name="hasShadow">false</item>
+        <item name="strokeWidth">5</item>
+    </style>
+    
 </resources>

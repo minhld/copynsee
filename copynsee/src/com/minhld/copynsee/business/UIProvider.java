@@ -1,7 +1,6 @@
 package com.minhld.copynsee.business;
 
 import com.minhld.copynsee.FloatService;
-import com.minhld.copynsee.IntroActivity;
 import com.minhld.copynsee.R;
 import com.minhld.copynsee.utils.Constant;
 import com.minhld.copynsee.utils.Utils;
@@ -46,9 +45,6 @@ public class UIProvider {
 		// initialize background service
 		// to draw background floating icon & listen to clip-board
 		context.startService(new Intent(context, FloatService.class));
-		
-		DataDownloader downloader = new DataDownloader(context);
-		downloader.execute();
 	}
 	
 	public static void setClipboard(ClipData clipData){
