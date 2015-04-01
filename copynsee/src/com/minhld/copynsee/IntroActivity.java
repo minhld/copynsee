@@ -7,6 +7,7 @@ import com.minhld.copynsee.R;
 import com.minhld.copynsee.business.DataDownloader;
 import com.minhld.copynsee.business.UIProvider;
 import com.minhld.copynsee.components.CircularProgressBar;
+import com.minhld.copynsee.data.DataProvider;
 import com.minhld.copynsee.utils.Utils;
 
 import android.app.Activity;
@@ -107,6 +108,7 @@ public class IntroActivity extends Activity {
 		new Handler().postDelayed(new Thread(){
 			public void run(){
 				if (isExit.length > 0 && isExit[0]){
+					// DB files are failed to download
 					System.exit(0);
 					return;
 				}else{
@@ -116,6 +118,9 @@ public class IntroActivity extends Activity {
 					// remove the current introduction window
 					finish();
 					Utils.toast(IntroActivity.this, R.string.ui_notice_run_in_bg, 3000);
+					
+					// loading DB
+					DataProvider.openDbSync(IntroActivity.this);
 				}
 			}
 		}, runAfterMillisecond);
