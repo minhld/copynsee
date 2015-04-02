@@ -116,11 +116,13 @@ public class IntroActivity extends Activity {
 					UIProvider.initiateFloatingService(IntroActivity.this);
 					
 					// remove the current introduction window
-					finish();
 					Utils.toast(IntroActivity.this, R.string.ui_notice_run_in_bg, 3000);
 					
 					// loading DB
 					DataProvider.openDbSync(IntroActivity.this);
+
+					// close the intro activity
+					finish();
 				}
 			}
 		}, runAfterMillisecond);

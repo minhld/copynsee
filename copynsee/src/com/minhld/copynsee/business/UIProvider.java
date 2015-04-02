@@ -1,7 +1,11 @@
 package com.minhld.copynsee.business;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.minhld.copynsee.FloatService;
 import com.minhld.copynsee.R;
+import com.minhld.copynsee.data.Word;
 import com.minhld.copynsee.utils.Constant;
 import com.minhld.copynsee.utils.Utils;
 
@@ -15,7 +19,8 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 
@@ -30,7 +35,7 @@ import android.widget.PopupWindow;
 public class UIProvider {
 	private static int ID_NOTIFICATION = 2018;
 
-	private static EditText searchText;
+	private static AutoCompleteTextView searchText;
 	private static ImageView searchBtn;
 	private static PopupWindow popupWindow = null;
 	
@@ -86,7 +91,7 @@ public class UIProvider {
 		try {
 			LayoutInflater popupInflater = (LayoutInflater)context.getSystemService(
 	        								Context.LAYOUT_INFLATER_SERVICE);
-	        View popupView = popupInflater.inflate(R.layout.popup_words, null);
+	        final View popupView = popupInflater.inflate(R.layout.popup_words, null);
 	        
 	        int popupWidth = Utils.getFloatingIconSize() * 5;
 	        int popupHeight = (int)(popupWidth * 1.2f);
@@ -96,14 +101,16 @@ public class UIProvider {
 			popupWindow.setBackgroundDrawable(popupBackground);
 	        popupWindow.showAsDropDown(anchor, 0, 1);
 	        
-	        searchText = (EditText)popupView.findViewById(R.id.searchText);
+	        // search text editor
+	        searchText = (AutoCompleteTextView)popupView.findViewById(R.id.searchText);
 	        
+	        // search button
 	        searchBtn = (ImageView)popupView.findViewById(R.id.searchBtn);
 	        searchBtn.setOnClickListener(new View.OnClickListener(){
 				@Override
 				public void onClick(View v) {
 					String searchStr = searchText.getText().toString();
-					lookupWord(searchStr);
+					lookupWord(popupView.getContext(), searchStr);
 				}
 	        });
 			
@@ -148,13 +155,18 @@ public class UIProvider {
 	 * this function will analyze the multiple words from user
 	 * and look up in dictionary
 	 * 
+	 * @param context
 	 * @param words
 	 */
-	private static void lookupWord(String words){
+	private static void lookupWord(final Context context, String words){
 		new WordsSearchTask(words, new WordsSearchTask.WordsSearchListener() {
+			
 			@Override
-			public void wordsSearchDone(boolean searchResult, String msg) {
-				
+			public void wordsSearchDone(boolean searchResult,
+										List<Word> wordList) {
+				WordAdapter adapter = new WordAdapter(context, wordList);
+				searchText.setAdapter(adapter);
+				searchText.showDropDown();
 			}
 		}).execute();
 	}

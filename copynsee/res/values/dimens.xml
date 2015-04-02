@@ -10,4 +10,5 @@
     <dimen name="text_search_size">15sp</dimen>
     <dimen name="text_error_size">16sp</dimen>
     
+    <dimen name="word_suggest_height">20dp</dimen>
 </resources>

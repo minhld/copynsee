@@ -13,7 +13,7 @@
         android:alpha="0.95"
         android:padding="@dimen/main_popup_inner_padding">
         
-        <EditText 
+        <AutoCompleteTextView 
             android:id="@+id/searchText"
             android:layout_width="match_parent"
             android:layout_height="28dp"
