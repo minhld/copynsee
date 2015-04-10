@@ -37,6 +37,23 @@
             android:layout_marginTop="3dp"
             android:layout_marginRight="5dp"/>
         
+        <!--  
+        <ListView 
+            android:id="@+id/suggestList"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/searchText"
+            android:layout_marginTop="5px"
+            android:background="@drawable/text_curve_bg"/>
+        -->
+        
+        <TextView 
+            android:id="@+id/suggestText"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@+id/searchText"
+            android:layout_marginTop="5px"/>
+        
     </RelativeLayout>
     
 </RelativeLayout>

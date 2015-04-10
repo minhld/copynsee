@@ -19,10 +19,10 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 /**
  * This class will provide basic and commonly use function
@@ -37,6 +37,8 @@ public class UIProvider {
 
 	private static AutoCompleteTextView searchText;
 	private static ImageView searchBtn;
+	private static TextView suggestText;
+	
 	private static PopupWindow popupWindow = null;
 	
 	private static Drawable popupBackground = null;
@@ -91,7 +93,7 @@ public class UIProvider {
 		try {
 			LayoutInflater popupInflater = (LayoutInflater)context.getSystemService(
 	        								Context.LAYOUT_INFLATER_SERVICE);
-	        final View popupView = popupInflater.inflate(R.layout.popup_words, null);
+	        View popupView = popupInflater.inflate(R.layout.popup_words, null);
 	        
 	        int popupWidth = Utils.getFloatingIconSize() * 5;
 	        int popupHeight = (int)(popupWidth * 1.2f);
@@ -110,10 +112,12 @@ public class UIProvider {
 				@Override
 				public void onClick(View v) {
 					String searchStr = searchText.getText().toString();
-					lookupWord(popupView.getContext(), searchStr);
+					lookupWord(context, searchStr);
 				}
 	        });
 			
+	        suggestText = (TextView)popupView.findViewById(R.id.suggestSpan);
+	        
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
