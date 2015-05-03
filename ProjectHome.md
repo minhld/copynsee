@@ -1,0 +1,1 @@
+this dictionary use default "Copy" function in android device as the input to inquiry
